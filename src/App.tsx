@@ -34,7 +34,7 @@ function verifyDescription(taskDescription: string): string {
 function App() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [isTaskDone, setIsTaskDone] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
   const [tasksArray, setTasksArray] = useState<Task[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
@@ -115,8 +115,8 @@ function App() {
                   setName('');
                 }}
                 onClickCheckTask={() => {
-                  setIsTaskDone(!isTaskDone);
-                  task.isDone = isTaskDone;
+                  setIsChecked(!isChecked)
+                  task.isDone = isChecked;
                 }} />
             )
           })}

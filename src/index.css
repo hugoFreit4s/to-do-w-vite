@@ -189,13 +189,13 @@
     padding: 10px 20px 10px 20px;
 }
 
-.task_top_div{
+.task_top_div {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.task_texts{
+.task_texts {
     display: flex;
     flex-direction: column;
     line-height: 0;
@@ -203,30 +203,33 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#task_name{
+#task_name {
     font-size: 20px;
 }
 
-#task_description{
+#task_description {
     font-size: 14px;
     color: rgba(128, 128, 128, 0.872);
     margin-top: 0;
 }
 
-.task_checkcircle{
-    border: 2px solid rgba(128, 128, 128, 0.872);
+.task_checkcircle,
+.task_checkcircle_active {
     padding: 0 5px 0 5px;
     border-radius: 20px;
     cursor: pointer;
+    user-select: none;
+
 }
 
-.task_checkcircle_active{
+.task_checkcircle {
+    border: 2px solid rgba(128, 128, 128, 0.872);
+}
+
+.task_checkcircle_active {
     border: 2px solid #065DFB;
-    padding: 0 5px 0 5px;
-    border-radius: 20px;
-    color: white;
     background-color: #065DFB;
-    cursor: pointer;
+    color: white;
 }
 
 .task_div hr {
