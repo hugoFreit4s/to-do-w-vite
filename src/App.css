@@ -1,0 +1,9 @@
+.modal_backdrop{
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.280);
+    backdrop-filter: blur(3px);
+}
+
+h1{
+    color: red;
+}

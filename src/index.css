@@ -1,0 +1,51 @@
+.modal_backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.280);
+    backdrop-filter: blur(3px);
+}
+
+.modal_content {
+    background-color: white;
+    border-radius: 6px;
+    height: 200px;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal_content input {}
+
+#task_name_input {
+    height: 20%;
+}
+
+#task_description_input {
+    height: 50%;
+}
+
+#task_name_input, #task_description_input{
+    border: 0;
+    border-radius: 6px;
+}
+
+.modal_inputs{
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+}
+
+.modal_buttons, .left_buttons, .right_buttons{
+    display: flex;
+}
+
+.modal_buttons{
+    padding: 20px 20px 20px 20px;
+    justify-content: space-between;
+}
