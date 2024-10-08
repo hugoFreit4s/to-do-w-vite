@@ -2,7 +2,7 @@ type Props = {
     task: {
         taskName: string,
         taskID: string,
-        isTaskDone: boolean,
+        isDone: boolean,
         editing: boolean
         taskDescription: string
     }
@@ -10,12 +10,19 @@ type Props = {
     onClickEditButton: React.MouseEventHandler<HTMLButtonElement>;
     onChangeEditInput: React.ChangeEventHandler<HTMLInputElement>;
     onClickConfirmEditButton: React.MouseEventHandler<HTMLButtonElement>;
+    onClickCheckTask: React.MouseEventHandler<HTMLDivElement>;
 }
-const TaskElement = ({ task, onClickRemoveButton: removeFunction, onClickEditButton: editFunction, onChangeEditInput: handleInputChange, onClickConfirmEditButton: confirmEditFunction }: Props) => {
+const TaskElement = ({ task, onClickRemoveButton: removeFunction, onClickEditButton: editFunction, onChangeEditInput: handleInputChange, onClickConfirmEditButton: confirmEditFunction, onClickCheckTask: checkTask }: Props) => {
     return (
-        <div>
-            <p style={{ backgroundColor: 'gray', width: 'fit-content' }}>{task.taskName}</p>
-            <p style={{ backgroundColor: 'gray', width: 'fit-content' }}>{task.taskDescription}</p>
+        <div className="task_div">
+            <div className="task_top_div">
+                <div className="task_texts">
+                    <p id="task_name">{task.taskName}</p>
+                    <p id="task_description">{task.taskDescription}</p>
+                </div>
+                <div className="task_checkcircle" onClick={checkTask}>&#x2714;</div>
+            </div>
+            <hr />
             <div className="task_buttons">
                 <button onClick={removeFunction}>Remove task</button>
                 <button onClick={editFunction}>Edit task</button>

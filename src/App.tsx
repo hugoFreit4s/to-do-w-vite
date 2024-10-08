@@ -1,11 +1,11 @@
-import { EventHandler, useState } from 'react';
+import { useState } from 'react';
 import TaskElement from './TaskElement';
 
 type Task = {
   taskName: string,
   taskDescription: string,
   taskID: string,
-  isTaskDone: boolean,
+  isDone: boolean,
   editing: boolean
 }
 
@@ -73,7 +73,7 @@ function App() {
                 <button id='add_task_button' className='modal_buttons' onClick={() => {
                   const taskName = verifyName(name);
                   const taskDescription = verifyDescription(description);
-                  setTasksArray(prev => [...prev, { taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isTaskDone: false, editing: false }])
+                  setTasksArray(prev => [...prev, { taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, editing: false }])
                   setName('');
                   setDescription('');
                   setIsModalOpened(false);
@@ -82,33 +82,45 @@ function App() {
             </div>
           </div>
         </div>}
-      <div className="tasks_div">
-        {tasksArray.map(task => {
-          return (
-            <TaskElement task={task}
-              onClickRemoveButton={() => {
-                const temporaryArray = tasksArray.filter(taskToKeep => {
-                  if (taskToKeep.taskID !== task.taskID) return taskToKeep;
-                });
-                setTasksArray([...temporaryArray]);
-              }}
-              onClickEditButton={() => {
-                task.editing = !task.editing
-                setIsEditing(!isEditing);
-              }}
-              onChangeEditInput={(e) => {
-                setName(e.target.value);
-              }}
-              onClickConfirmEditButton={() => {
-                const taskName = verifyName(name)
-                const taskIndex = tasksArray.indexOf(task);
-                tasksArray[taskIndex].taskName = taskName;
-                task.editing = false;
-                setIsEditing(false);
-                setName('');
-              }} />
-          )
-        })}
+      <div className="main">
+        <div className='sections_div'>
+          <div className='section'>All<span>5</span></div>
+          <div className='section'>Open<span>23</span></div>
+          <div className='section'>Closed<span>4</span></div>
+          <div className='section'>Archived<span>12</span></div>
+        </div>
+        <div className="tasks_div">
+          {tasksArray.map(task => {
+            return (
+              <TaskElement task={task}
+                onClickRemoveButton={() => {
+                  const temporaryArray = tasksArray.filter(taskToKeep => {
+                    if (taskToKeep.taskID !== task.taskID) return taskToKeep;
+                  });
+                  setTasksArray([...temporaryArray]);
+                }}
+                onClickEditButton={() => {
+                  task.editing = !task.editing
+                  setIsEditing(!isEditing);
+                }}
+                onChangeEditInput={(e) => {
+                  setName(e.target.value);
+                }}
+                onClickConfirmEditButton={() => {
+                  const taskName = verifyName(name)
+                  const taskIndex = tasksArray.indexOf(task);
+                  tasksArray[taskIndex].taskName = taskName;
+                  task.editing = false;
+                  setIsEditing(false);
+                  setName('');
+                }}
+                onClickCheckTask={() => {
+                  setIsTaskDone(!isTaskDone);
+                  task.isDone = isTaskDone;
+                }} />
+            )
+          })}
+        </div>
       </div>
     </div>
   );
