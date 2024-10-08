@@ -6,7 +6,8 @@ type Task = {
   taskDescription: string,
   taskID: string,
   isDone: boolean,
-  editing: boolean
+  editing: boolean,
+  removing: boolean
 }
 
 function getDayName(dateStr: string, locale: string) {
@@ -37,6 +38,7 @@ function App() {
   const [isChecked, setIsChecked] = useState<boolean>(true);
   const [tasksArray, setTasksArray] = useState<Task[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
 
   const date = new Date();
@@ -70,10 +72,10 @@ function App() {
               </div>
               <div className="right_buttons">
                 <button id='cancel_button' className='modal_buttons' onClick={() => setIsModalOpened(false)}>Cancel</button>
-                <button id='add_task_button' className='modal_buttons' onClick={() => {
+                <button id='confirm_button' className='modal_buttons' onClick={() => {
                   const taskName = verifyName(name);
                   const taskDescription = verifyDescription(description);
-                  setTasksArray(prev => [...prev, { taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, editing: false }])
+                  setTasksArray(prev => [...prev, { taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, editing: false, removing: false }])
                   setName('');
                   setDescription('');
                   setIsModalOpened(false);
@@ -94,10 +96,21 @@ function App() {
             return (
               <TaskElement task={task}
                 onClickRemoveButton={() => {
+                  task.removing = true;
+                  setIsRemoving(true);
+                  console.log(task.removing)
+                }}
+                onClickCancelRemoveButton={() => {
+                  task.removing = false;
+                  setIsRemoving(false);
+                }}
+                onClickConfirmRemoveButton={() => {
                   const temporaryArray = tasksArray.filter(taskToKeep => {
                     if (taskToKeep.taskID !== task.taskID) return taskToKeep;
                   });
                   setTasksArray([...temporaryArray]);
+                  setIsRemoving(false);
+                  task.removing = false;
                 }}
                 onClickEditButton={() => {
                   task.editing = !task.editing

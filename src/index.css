@@ -112,7 +112,7 @@
     background-color: white;
 }
 
-#add_task_button {
+#confirm_button {
     padding-right: 15px;
     padding-left: 15px;
     border-color: transparent;
@@ -235,4 +235,26 @@
 .task_div hr {
     width: 100%;
     border: 1px solid #F4F4F4;
+}
+
+.remove_modal_content {
+    height: 150px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+}
+
+#remove_modal_main_text,
+#remove_modal_sub_text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.remove_modal_hr{
+    width: 70%;
+}
+
+.remove_modal_buttons {
+    gap: 20px;
+    display: flex;
+    justify-content: end;
 }
