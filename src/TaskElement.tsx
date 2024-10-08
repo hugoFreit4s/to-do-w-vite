@@ -7,7 +7,8 @@ type Props = {
         isDone: boolean,
         editing: boolean
         taskDescription: string,
-        removing: boolean
+        removing: boolean,
+        situation: 'Open' | 'Closed' | 'Archived'
     }
     onClickRemoveButton: React.MouseEventHandler<HTMLButtonElement> //Aprendi a tipar isso no Stackoverflow
     onClickCancelRemoveButton: React.MouseEventHandler<HTMLButtonElement>
@@ -34,7 +35,7 @@ const TaskElement = ({ task, onClickRemoveButton: openRemoveModal, onClickCancel
                     <div className="modal_content remove_modal_content">
                         <div className="remove_message">
                             <p id="remove_modal_main_text">Are you sure you want to remove the task?</p>
-                            <hr id="remove_modal_hr"/>
+                            <hr id="remove_modal_hr" />
                             <p id="remove_modal_sub_text">This can't be undone.</p>
                         </div>
                         <div className="remove_modal_buttons">
