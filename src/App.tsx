@@ -43,19 +43,35 @@ function App() {
   const openTasksArray = tasksArray.filter(task => {
     if (task.situation === 'Open') return task;
   });
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isRemoving, setIsRemoving] = useState<boolean>(false);
+  const archivedTasksArray = tasksArray.filter(task => {
+    if (task.situation === 'Archived') return task;
+  });
+
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
-  const [openTasks, setOpenTasks] = useState<number>(0);
-  const [closedTasks, setClosedTasks] = useState<number>(0);
-  const [archivedTasks, setArchivedTasks] = useState<number>(0);
-  const [allTasks, setAllTasks] = useState<number>(0);
   const [sectionToRender, setSectionToRender] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
 
   const date = new Date();
   const dateStr = `${date.getMonth() + 1} /${date.getDay() - 1}/${date.getFullYear()}`
   const dayOfTheWeek = getDayName(dateStr, 'en-us');
 
+
+  function checkTasks(task: Task) {
+    task.isDone = !task.isDone;
+    task.situation = task.isDone ? 'Closed' : 'Open';
+    setIsChecked(!isChecked);
+  }
+
+  function removeTasks(task: Task) {
+    const temporaryArray = tasksArray.filter(taskToKeep => {
+      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
+    });
+    setTasksArray([...temporaryArray]);
+  }
+
+  function archiveTasks(task: Task) {
+    task.situation = 'Archived';
+    setIsChecked(task.isDone ? true : false);
+  }
 
   return (
     <div id='app_container'>
@@ -90,7 +106,6 @@ function App() {
                   const temporaryArray = tasksArray.map(x => { return x });
                   temporaryArray.push({ taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, situation: 'Open' });
                   setTasksArray(temporaryArray);
-                  setAllTasks(tasksArray.length + 1);
                   setName('');
                   setDescription('');
                   setIsModalOpened(false);
@@ -100,26 +115,19 @@ function App() {
           </div>
         </div>}
       <div className="main">
-        {<TaskSection allTasks={tasksArray.length} openTasks={openTasksArray.length} closedTasks={closedTasksArray.length} archivedTasks={archivedTasks} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
+        {<TaskSection allTasks={tasksArray.length} openTasks={openTasksArray.length} closedTasks={closedTasksArray.length} archivedTasks={archivedTasksArray.length} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
         <div className="tasks_div">
           {sectionToRender === 'All' && tasksArray.map(task => {
             return (
               <TaskElement task={task}
                 onClickConfirmRemoveButton={() => {
-                  const temporaryArray = tasksArray.filter(taskToKeep => {
-                    if (taskToKeep.taskID !== task.taskID) return taskToKeep;
-                  });
-                  setTasksArray([...temporaryArray]);
+                  removeTasks(task);
                 }}
                 onClickCheckTask={() => {
-                  let closedTasks = 0;
-                  task.isDone = !task.isDone;
-                  task.situation = task.isDone ? 'Closed' : 'Open';
-                  tasksArray.map(t => {
-                    if (t.situation === 'Closed') closedTasks++;
-                  });
-                  setClosedTasks(closedTasks);
-                  setIsChecked(!isChecked);
+                  checkTasks(task);
+                }}
+                onClickArchiveTask={() => {
+                  archiveTasks(task);
                 }} />
             )
           })}
@@ -128,20 +136,13 @@ function App() {
               return (
                 <TaskElement task={task}
                   onClickConfirmRemoveButton={() => {
-                    const temporaryArray = tasksArray.filter(taskToKeep => {
-                      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
-                    });
-                    setTasksArray([...temporaryArray]);
+                    removeTasks(task);
                   }}
                   onClickCheckTask={() => {
-                    let closedTasks = 0;
-                    task.isDone = !task.isDone;
-                    task.situation = task.isDone ? 'Closed' : 'Open';
-                    tasksArray.map(t => {
-                      if (t.situation === 'Closed') closedTasks++;
-                    });
-                    setClosedTasks(closedTasks);
-                    setIsChecked(!isChecked);
+                    checkTasks(task);
+                  }}
+                  onClickArchiveTask={() => {
+                    archiveTasks(task);
                   }} />
               )
             }
@@ -150,21 +151,15 @@ function App() {
             if (task.situation === 'Closed') {
               return (
                 <TaskElement task={task}
+
                   onClickConfirmRemoveButton={() => {
-                    const temporaryArray = tasksArray.filter(taskToKeep => {
-                      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
-                    });
-                    setTasksArray([...temporaryArray]);
+                    removeTasks(task);
                   }}
                   onClickCheckTask={() => {
-                    let closedTasks = 0;
-                    task.isDone = !task.isDone;
-                    task.situation = task.isDone ? 'Closed' : 'Open';
-                    tasksArray.map(t => {
-                      if (t.situation === 'Closed') closedTasks++;
-                    });
-                    setClosedTasks(closedTasks);
-                    setIsChecked(!isChecked);
+                    checkTasks(task);
+                  }}
+                  onClickArchiveTask={() => {
+                    archiveTasks(task);
                   }} />
               )
             }
@@ -173,21 +168,15 @@ function App() {
             if (task.situation === 'Archived') {
               return (
                 <TaskElement task={task}
+
                   onClickConfirmRemoveButton={() => {
-                    const temporaryArray = tasksArray.filter(taskToKeep => {
-                      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
-                    });
-                    setTasksArray([...temporaryArray]);
+                    removeTasks(task);
                   }}
                   onClickCheckTask={() => {
-                    let closedTasks = 0;
-                    task.isDone = !task.isDone;
-                    task.situation = task.isDone ? 'Closed' : 'Open';
-                    tasksArray.map(t => {
-                      if (t.situation === 'Closed') closedTasks++;
-                    });
-                    setClosedTasks(closedTasks);
-                    setIsChecked(!isChecked);
+                    checkTasks(task);
+                  }}
+                  onClickArchiveTask={() => {
+                    archiveTasks(task);
                   }} />
               )
             }

@@ -259,11 +259,26 @@
     justify-content: end;
 }
 
-.closed {
-    background-color: #D2FAD2;
-}
-
 .edit_modal_buttons {
     justify-content: end;
     gap: 30px;
+}
+
+.tasks_svg {
+    height: 30px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.task_buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.archive_modal_content{
+    height: 200px;
+    width: 400px;
+    display: flex;
+    padding: 0 20px 0 20px;
+    justify-content: space-around;
 }
