@@ -7,8 +7,6 @@ type Task = {
   taskDescription: string,
   taskID: string,
   isDone: boolean,
-  editing: boolean,
-  removing: boolean,
   situation: 'Open' | 'Closed' | 'Archived';
 }
 
@@ -49,8 +47,13 @@ function App() {
   const [sectionToRender, setSectionToRender] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
 
   const date = new Date();
-  const dateStr = `${date.getMonth() + 1}/${date.getDay() - 1}/${date.getFullYear()}`
+  const dateStr = `${date.getMonth() + 1} /${date.getDay() - 1}/${date.getFullYear()}`
   const dayOfTheWeek = getDayName(dateStr, 'en-us');
+
+  const closedTasksAmount = tasksArray.map(task => {
+    if (task.situation === 'Closed') return task;
+  });
+  console.log(closedTasksAmount)
 
   return (
     <div id='app_container'>
@@ -82,7 +85,9 @@ function App() {
                 <button id='confirm_button' className='modal_buttons' onClick={() => {
                   const taskName = verifyName(name);
                   const taskDescription = verifyDescription(description);
-                  setTasksArray(prev => [...prev, { taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, editing: false, removing: false, situation: 'Open' }]);
+                  const temporaryArray = tasksArray.map(x => { return x });
+                  temporaryArray.push({ taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, situation: 'Open' });
+                  setTasksArray(temporaryArray);
                   setAllTasks(tasksArray.length + 1);
                   setName('');
                   setDescription('');
@@ -93,43 +98,16 @@ function App() {
           </div>
         </div>}
       <div className="main">
-        {<TaskSection allTasks={allTasks} openTasks={openTasks} closedTasks={closedTasks} archivedTasks={archivedTasks} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
+        {<TaskSection allTasks={tasksArray.length} openTasks={openTasks} closedTasks={closedTasks} archivedTasks={archivedTasks} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
         <div className="tasks_div">
           {sectionToRender === 'All' && tasksArray.map(task => {
             return (
               <TaskElement task={task}
-                onClickRemoveButton={() => {
-                  task.removing = true;
-                  setIsRemoving(true);
-                }}
-                onClickCancelRemoveButton={() => {
-                  task.removing = false;
-                  setIsRemoving(false);
-                }}
                 onClickConfirmRemoveButton={() => {
                   const temporaryArray = tasksArray.filter(taskToKeep => {
                     if (taskToKeep.taskID !== task.taskID) return taskToKeep;
                   });
                   setTasksArray([...temporaryArray]);
-                  setAllTasks(tasksArray.length - 1);
-                  setIsRemoving(false);
-                  task.removing = false;
-                }}
-                onClickEditButton={() => {
-                  task.editing = !task.editing
-                  setIsEditing(!isEditing);
-                }}
-                onChangeEditInput={(e) => {
-                  setName(e.target.value);
-                }}
-                onClickConfirmEditButton={() => {
-                  const taskName = verifyName(name)
-                  const taskIndex = tasksArray.indexOf(task);
-                  setIsChecked(false);
-                  tasksArray[taskIndex].taskName = taskName;
-                  task.editing = false;
-                  setIsEditing(false);
-                  setName('');
                 }}
                 onClickCheckTask={() => {
                   let closedTasks = 0;
@@ -147,36 +125,11 @@ function App() {
             if (task.situation === 'Closed') {
               return (
                 <TaskElement task={task}
-                  onClickRemoveButton={() => {
-                    task.removing = true;
-                    setIsRemoving(true);
-                  }}
-                  onClickCancelRemoveButton={() => {
-                    task.removing = false;
-                    setIsRemoving(false);
-                  }}
                   onClickConfirmRemoveButton={() => {
                     const temporaryArray = tasksArray.filter(taskToKeep => {
                       if (taskToKeep.taskID !== task.taskID) return taskToKeep;
                     });
                     setTasksArray([...temporaryArray]);
-                    setIsRemoving(false);
-                    task.removing = false;
-                  }}
-                  onClickEditButton={() => {
-                    task.editing = !task.editing
-                    setIsEditing(!isEditing);
-                  }}
-                  onChangeEditInput={(e) => {
-                    setName(e.target.value);
-                  }}
-                  onClickConfirmEditButton={() => {
-                    const taskName = verifyName(name)
-                    const taskIndex = tasksArray.indexOf(task);
-                    tasksArray[taskIndex].taskName = taskName;
-                    task.editing = false;
-                    setIsEditing(false);
-                    setName('');
                   }}
                   onClickCheckTask={() => {
                     let closedTasks = 0;

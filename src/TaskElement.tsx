@@ -1,24 +1,21 @@
-import React from "react"
+import React, { useState } from "react"
 
 type Props = {
     task: {
         taskName: string,
         taskID: string,
         isDone: boolean,
-        editing: boolean
         taskDescription: string,
-        removing: boolean,
         situation: 'Open' | 'Closed' | 'Archived'
     }
-    onClickRemoveButton: React.MouseEventHandler<HTMLButtonElement> //Aprendi a tipar isso no Stackoverflow
-    onClickCancelRemoveButton: React.MouseEventHandler<HTMLButtonElement>
     onClickConfirmRemoveButton: React.MouseEventHandler<HTMLButtonElement>
-    onClickEditButton: React.MouseEventHandler<HTMLButtonElement>;
-    onChangeEditInput: React.ChangeEventHandler<HTMLInputElement>;
-    onClickConfirmEditButton: React.MouseEventHandler<HTMLButtonElement>;
     onClickCheckTask: React.MouseEventHandler<HTMLDivElement>;
 }
-const TaskElement = ({ task, onClickRemoveButton: openRemoveModal, onClickCancelRemoveButton: cancelRemoveFunction, onClickConfirmRemoveButton: removeFunction, onClickEditButton: editFunction, onChangeEditInput: handleInputChange, onClickConfirmEditButton: confirmEditFunction, onClickCheckTask: checkTaskFunction }: Props) => {
+const TaskElement = ({ task, onClickConfirmRemoveButton: removeFunction, onClickCheckTask: checkTaskFunction }: Props) => {
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState<boolean>(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+    const [name, setName] = useState<string>('');
+    
     return (
         <div className="task_div">
             <div className="task_top_div">
@@ -30,8 +27,8 @@ const TaskElement = ({ task, onClickRemoveButton: openRemoveModal, onClickCancel
             </div>
             <hr />
             <div className="task_buttons">
-                <button onClick={openRemoveModal}>Remove task</button>
-                {task.removing && <div className="modal_backdrop">
+                <button onClick={() => setIsRemoveModalOpen(true)}>Remove task</button>
+                {isRemoveModalOpen && <div className="modal_backdrop">
                     <div className="modal_content remove_modal_content">
                         <div className="remove_message">
                             <p id="remove_modal_main_text">Are you sure you want to remove the task?</p>
@@ -39,16 +36,19 @@ const TaskElement = ({ task, onClickRemoveButton: openRemoveModal, onClickCancel
                             <p id="remove_modal_sub_text">This can't be undone.</p>
                         </div>
                         <div className="remove_modal_buttons">
-                            <button id="cancel_button" className="modal_buttons" onClick={cancelRemoveFunction}>Cancel</button>
+                            <button id="cancel_button" className="modal_buttons" onClick={() => setIsRemoveModalOpen(false)}>Cancel</button>
                             <button id="confirm_button" className="modal_buttons" onClick={removeFunction}>Remove</button>
                         </div>
                     </div>
                 </div>}
-                <button onClick={editFunction}>Edit task</button>
+                <button onClick={() => setIsEditModalOpen(true)}>Edit task</button>
             </div>
-            {task.editing && <div className="edit_task_div">
-                <input type="text" onChange={handleInputChange} />
-                <button onClick={confirmEditFunction}>Edit!</button>
+            {isEditModalOpen && <div className="edit_task_div">
+                <input type="text" onChange={e => setName(e.target.value)} />
+                <button onClick={() => {
+                    task.taskName = name
+                    setIsEditModalOpen(false);
+                }}>Edit!</button>
             </div>}
         </div>
     )
