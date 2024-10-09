@@ -1,284 +1,230 @@
 #root {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    background-color: #E3E4E9;
+    padding: 10px 10px 10px 10px;
 }
 
-#app_container {
+#main {
     display: flex;
     flex-direction: column;
-    width: 26%;
-    gap: 30px;
-}
-
-.header {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 40%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px 40px 20px 40px;
 }
 
-.header_left_side {
-    line-height: 10px;
-    text-align: center;
-}
-
-.header_left_side h1 {
-    font-size: 25px;
-}
-
-.header_left_side h2 {
-    color: gray;
-    font-size: 17px;
-    font-weight: 400;
-}
-
-.new_task_button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #E2EBFA;
-    color: #065DFB;
-    border: none;
-    padding: 10px 25px 10px 25px;
-    font-size: 16px;
-    border-radius: 13px;
-    font-weight: 500;
+button {
     cursor: pointer;
 }
 
-.modal_backdrop {
+#head_div {
+    width: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: space-between;
+}
+
+#greeting_div {
+    display: flex;
+    flex-direction: column;
+    line-height: 0;
+}
+
+#add_task_button {
+    background-color: #E2EBFA;
+    color: #025efc;
+    ;
+    padding: 12px 35px 12px 35px;
+    border-radius: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.5s;
+    user-select: none;
+}
+
+#add_task_button:hover {
+    background-color: #c1d8ff;
+}
+
+.title_txt {}
+
+.subtitle_txt {
+    font-size: 18px;
+    color: rgba(128, 128, 128, 0.700);
+    font-weight: 400;
+}
+
+.modal_backdrop {
+    position: fixed;
     height: 100%;
     width: 100%;
-    top: 0;
+    background-color: rgba(0, 0, 0, 0.400);
+    backdrop-filter: blur(4px);
     left: 0;
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.280);
-    backdrop-filter: blur(3px);
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal_content {
     background-color: white;
-    border-radius: 10px;
-    height: 200px;
-    width: 800px;
+    border-radius: 8px;
+}
+
+#add_task_modal_content {
     display: flex;
     flex-direction: column;
-    padding: 20px 20px 15px 20px;
-    box-shadow: 4px 4px 60px gray;
+    height: 250px;
+    width: 800px;
 }
 
-#task_name_input {
-    height: 20%;
-}
-
-#task_description_input {
-    height: 50%;
-}
-
-#task_name_input,
-#task_description_input {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 0;
-    border-radius: 6px;
-}
-
-.modal_inputs {
+#add_modal_inputs {
     display: flex;
     flex-direction: column;
     height: 70%;
-}
-
-.modal_buttons_div,
-.left_buttons,
-.right_buttons {
-    display: flex;
-}
-
-.left_buttons,
-.right_buttons {
+    padding: 10px 0 10px 0;
     gap: 10px;
 }
 
-#assign_to_div {
-    color: rgba(128, 128, 128, 0.872);
-    border-color: rgba(128, 128, 128, 0.368);
+#add_modal_inputs input {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 5px 20px 5px 20px;
+    color: rgba(0, 0, 0, 0.400);
 }
 
-#cancel_button {
-    color: rgba(128, 128, 128, 0.872);
-    border-color: rgba(128, 128, 128, 0.368);
-    background-color: white;
+#task_description_input {
+    height: 80%;
 }
 
-#confirm_button {
-    padding-right: 15px;
-    padding-left: 15px;
-    border-color: transparent;
+#add_modal_buttons {
+    height: 30%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 0 20px;
+}
+
+.add_task_modal_button {
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#cancel_task_add_button {
+    border: 2px solid #d3d3da;
+    padding: 5px 20px 5px 20px;
+    transition: border-color 0.5s;
+}
+
+#cancel_task_add_button:hover {
+    border-color: #aaaab0;
+}
+
+#confirm_add_task_button {
+    border: 2px solid purple;
     background-color: purple;
     color: white;
+    padding: 5px 25px 5px 25px;
+    transition: border-color 0.5s, background-color 0.5s;
 }
 
-.modal_buttons_div {
-    padding: 20px 20px 0 20px;
+#confirm_add_task_button:hover {
+    border-color: rgb(100, 1, 100);
+    background-color: rgb(100, 1, 100);
+}
+
+#sections_div {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
     justify-content: space-between;
 }
 
-.modal_buttons {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    cursor: pointer;
-    border: 2px solid;
-    padding: 4px 12px 4px 12px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.sections_div {
+.section {
+    color: #aaaab0;
     display: flex;
-    justify-content: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 500;
-    color: rgba(128, 128, 128, 0.872);
-    align-items: center;
-    gap: 30px;
-}
-
-.section,
-.section_active {
-    display: flex;
+    align-items: end;
     gap: 5px;
-    align-items: center;
-    padding: 2px 2px 2px 2px;
-    cursor: pointer;
-}
-
-.section span,
-.section_active span {
-    color: white;
-    font-weight: 100;
-    padding: 0 8px 1px 8px;
-    border-radius: 8px;
-    font-size: 13px;
 }
 
 .section span {
-    background-color: rgba(128, 128, 128, 0.872);
+    background-color: #aaaab0;
+    color: white;
+    padding: 0 6px 0 6px;
+    height: fit-content;
+    border-radius: 10px;
+    font-size: 13px;
 }
 
-.section_active {
-    color: #065DFB;
+#all_tasks_div {
+    margin-top: 40px;
+    width: 100%;
 }
 
-.section_active span {
-    background-color: #065DFB;
-}
-
-.tasks_div {
-    margin-top: 30px;
-}
-
-.task_div {
-    padding: 10px 10px 10px 10px;
+.task_body {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    border-radius: 8px;
-    box-shadow: 4px 4px 20px rgba(128, 128, 128, 0.168);
-    padding: 10px 20px 10px 20px;
+    padding: 30px 20px 30px 20px;
+    border-radius: 7px;
+    box-shadow: 0 5px 20px #aaaab0;
 }
 
-.task_top_div {
+.task_div_top {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 .task_texts {
-    display: flex;
-    flex-direction: column;
-    line-height: 0;
-    justify-content: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 5px;
 }
 
-#task_name {
+.task_main_txt {
     font-size: 20px;
 }
 
-#task_description {
-    font-size: 14px;
-    color: rgba(128, 128, 128, 0.872);
-    margin-top: 0;
-}
-
-.task_checkcircle,
-.task_checkcircle_active {
-    padding: 0 5px 0 5px;
-    border-radius: 20px;
-    cursor: pointer;
-    user-select: none;
-
+.task_sub_txt {
+    font-size: 15px;
+    color: #aaaab0;
 }
 
 .task_checkcircle {
-    border: 2px solid rgba(128, 128, 128, 0.872);
+    border-radius: 20px;
+    padding: 0px 5px 0px 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.task_checkcircle_inactive {
+    border: 1px solid black;
 }
 
 .task_checkcircle_active {
-    border: 2px solid #065DFB;
-    background-color: #065DFB;
+    border: 1px solid #0760FB;
+    background-color: #0760FB;
     color: white;
 }
 
-.task_div hr {
+.task_body hr {
     width: 100%;
-    border: 1px solid #F4F4F4;
+    border: 2px solid #aaaab031;
+    border-radius: 6px;
 }
 
-.remove_modal_content {
-    height: 150px;
-    width: 400px;
-    display: flex;
-    justify-content: center;
-}
-
-#remove_modal_main_text,
-#remove_modal_sub_text {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.remove_modal_hr {
-    width: 70%;
-}
-
-.remove_modal_buttons {
-    gap: 20px;
-    display: flex;
-    justify-content: end;
-}
-
-.edit_modal_buttons {
-    justify-content: end;
-    gap: 30px;
-}
-
-.tasks_svg {
-    height: 30px;
-    width: fit-content;
-    cursor: pointer;
-}
-
-.task_buttons {
+.task_div_bottom {
     display: flex;
     justify-content: space-between;
 }
 
-.archive_modal_content{
-    height: 200px;
-    width: 400px;
-    display: flex;
-    padding: 0 20px 0 20px;
-    justify-content: space-around;
+.task_div_svg {
+    height: 25px;
+    width: fit-content;
 }

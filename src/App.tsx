@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import TaskElement from './TaskElement';
-import TaskSection from './TasksSection';
-
-type Task = {
-  taskName: string,
-  taskDescription: string,
-  taskID: string,
-  isDone: boolean,
-  situation: 'Open' | 'Closed' | 'Archived';
-}
+import AddTaskModal from './AddTaskModal';
+import TaskSections from './TasksSections';
+import Task from './TaskType';
+import TaskDiv from './TaskDiv';
 
 function getDayName(dateStr: string, locale: string) {
   var date = new Date(dateStr);
@@ -23,168 +17,79 @@ function verifyName(taskName: string): string {
   }
 }
 
-function verifyDescription(taskDescription: string): string {
-  if (taskDescription.length < 10) {
-    return 'No description';
-  } else {
-    return taskDescription;
-  }
-}
-
 
 function App() {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [isChecked, setIsChecked] = useState<boolean>(true);
-  const [tasksArray, setTasksArray] = useState<Task[]>([]);
-  const closedTasksArray = tasksArray.filter(task => {
-    if (task.situation === 'Closed') return task;
-  });
-  const openTasksArray = tasksArray.filter(task => {
-    if (task.situation === 'Open') return task;
-  });
-  const archivedTasksArray = tasksArray.filter(task => {
-    if (task.situation === 'Archived') return task;
-  });
-
-  const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
-  const [sectionToRender, setSectionToRender] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
-
   const date = new Date();
-  const dateStr = `${date.getMonth() + 1} /${date.getDay() - 1}/${date.getFullYear()}`
-  const dayOfTheWeek = getDayName(dateStr, 'en-us');
+  const dateString = `${date.getMonth() + 1} / ${date.getDay() - 1} / ${date.getFullYear()}`;
+  const dayOfTheWeek = getDayName(dateString, 'en-us');
 
+  const [tasksArray, setTasksArray] = useState<Task[]>([]);
+  const [taskName, setTaskName] = useState<string>('');
+  const [taskDescription, setTaskDescription] = useState<string>('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
 
-  function checkTasks(task: Task) {
-    task.isDone = !task.isDone;
-    task.situation = task.isDone ? 'Closed' : 'Open';
-    setIsChecked(!isChecked);
+  function checkTask(task: Task) {
+    const index = tasksArray.indexOf(task);
+    const auxArray: Task[] = tasksArray;
+    auxArray[index].isDone = auxArray[index].isDone === true ? false : true;
+    setTasksArray(auxArray);
   }
 
-  function removeTasks(task: Task) {
-    const temporaryArray = tasksArray.filter(taskToKeep => {
-      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
-    });
-    setTasksArray([...temporaryArray]);
-  }
-
-  function archiveTasks(task: Task) {
-    task.situation = 'Archived';
-    setIsChecked(task.isDone ? true : false);
+  function renderAllTasks() {
+    return (
+      <div className='task_div'>
+        {tasksArray.map(task => {
+          return <TaskDiv task={task} functions={{ checkTask: () => { checkTask(task) } }} />
+        })}
+      </div>
+    )
   }
 
   return (
-    <div id='app_container'>
-      <div className="header">
-        <div className="header_left_side">
-          <h1>Today's Task</h1>
-          <h2>{`${dayOfTheWeek}, ${date.getDate()} ${date.toLocaleString('en-us', { month: 'long' })}`}</h2>
+    <div id="main">
+      <div id="head_div">
+        <div id="greeting_div">
+          <h1 className="title_txt">Today's Task</h1>
+          <h2 className="subtitle_txt">{dayOfTheWeek}, {date.getDay()} {date.toLocaleString('en-us', { month: 'long' })}</h2>
         </div>
-        <button className="new_task_button" onClick={() => setIsModalOpened(!isModalOpened)}>&#x2b; New Task</button>
+        <div id="add_task_button" onClick={() => setIsAddModalOpen(!isAddModalOpen)}>&#x2b; New Task</div>
+        {isAddModalOpen && <AddTaskModal
+          onChangeNameFunction={(e) => {
+            setTaskName(e.target.value);
+          }}
+          onChangeDescriptionFunction={(e) => {
+            setTaskDescription(e.target.value);
+          }}
+          addTaskFunction={() => {
+            const name = verifyName(taskName);
+            const newTask: Task = { taskName: name, taskDescription: taskDescription, isDone: false, taskID: crypto.randomUUID(), taskSituation: 'Open' };
+            const auxArray = [...tasksArray, newTask];
+            setTasksArray(auxArray);
+            setTaskName('');
+            setIsAddModalOpen(false);
+          }}
+          cancelTaskAddFunction={() => setIsAddModalOpen(false)}
+          inputValue={taskName}
+        />}
       </div>
-      {isModalOpened &&
-        <div className='modal_backdrop'>
-          <div className="modal_content">
-            <div className="modal_inputs">
-              <input value={name} placeholder='Task name here...' id='task_name_input' type="text" onChange={e => {
-                setName(e.target.value);
-              }} />
-              <input value={description} placeholder='Description' id='task_description_input' type="text" onChange={e => {
-                setDescription(e.target.value);
-              }} />
-            </div>
-            <div className="modal_buttons_div">
-              <div className="left_buttons">
-                <input type="date" name="task_date" id="task_date_input" />
-                <div id='assign_to_div' className='modal_buttons'>Assign To</div>
-              </div>
-              <div className="right_buttons">
-                <button id='cancel_button' className='modal_buttons' onClick={() => setIsModalOpened(false)}>Cancel</button>
-                <button id='confirm_button' className='modal_buttons' onClick={() => {
-                  const taskName = verifyName(name);
-                  const taskDescription = verifyDescription(description);
-                  const temporaryArray = tasksArray.map(x => { return x });
-                  temporaryArray.push({ taskName: taskName, taskDescription: taskDescription, taskID: crypto.randomUUID(), isDone: false, situation: 'Open' });
-                  setTasksArray(temporaryArray);
-                  setName('');
-                  setDescription('');
-                  setIsModalOpened(false);
-                }}>Add Task</button>
-              </div>
-            </div>
-          </div>
-        </div>}
-      <div className="main">
-        {<TaskSection allTasks={tasksArray.length} openTasks={openTasksArray.length} closedTasks={closedTasksArray.length} archivedTasks={archivedTasksArray.length} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
-        <div className="tasks_div">
-          {sectionToRender === 'All' && tasksArray.map(task => {
-            return (
-              <TaskElement task={task}
-                onClickConfirmRemoveButton={() => {
-                  removeTasks(task);
-                }}
-                onClickCheckTask={() => {
-                  checkTasks(task);
-                }}
-                onClickArchiveTask={() => {
-                  archiveTasks(task);
-                }} />
-            )
-          })}
-          {sectionToRender === 'Open' && tasksArray.map(task => {
-            if (task.situation === 'Open') {
-              return (
-                <TaskElement task={task}
-                  onClickConfirmRemoveButton={() => {
-                    removeTasks(task);
-                  }}
-                  onClickCheckTask={() => {
-                    checkTasks(task);
-                  }}
-                  onClickArchiveTask={() => {
-                    archiveTasks(task);
-                  }} />
-              )
-            }
-          })}
-          {sectionToRender === 'Closed' && tasksArray.map(task => {
-            if (task.situation === 'Closed') {
-              return (
-                <TaskElement task={task}
-
-                  onClickConfirmRemoveButton={() => {
-                    removeTasks(task);
-                  }}
-                  onClickCheckTask={() => {
-                    checkTasks(task);
-                  }}
-                  onClickArchiveTask={() => {
-                    archiveTasks(task);
-                  }} />
-              )
-            }
-          })}
-          {sectionToRender === 'Archived' && tasksArray.map(task => {
-            if (task.situation === 'Archived') {
-              return (
-                <TaskElement task={task}
-
-                  onClickConfirmRemoveButton={() => {
-                    removeTasks(task);
-                  }}
-                  onClickCheckTask={() => {
-                    checkTasks(task);
-                  }}
-                  onClickArchiveTask={() => {
-                    archiveTasks(task);
-                  }} />
-              )
-            }
-          })}
-        </div>
-      </div>
+      <TaskSections
+        allTasksAmount={tasksArray.length}
+        openTasksAmount={0}
+        closedTasksAmount={0}
+        archivedTasksAmount={0}
+        functions={
+          {
+            toggleAllSection: () => { setRenderedSection('All') },
+            toggleOpenSection: () => { setRenderedSection('Open') },
+            toggleClosedSection: () => { setRenderedSection('Closed') },
+            toggleArchivedSection: () => { setRenderedSection('Archived') }
+          }
+        }
+      />
+      {renderedSection && <div id='all_tasks_div'>{renderAllTasks()}</div>}
     </div>
-  );
+  )
 }
 
 export default App;
