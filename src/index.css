@@ -262,3 +262,8 @@
 .closed {
     background-color: #D2FAD2;
 }
+
+.edit_modal_buttons {
+    justify-content: end;
+    gap: 30px;
+}

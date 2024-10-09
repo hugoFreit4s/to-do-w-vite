@@ -15,6 +15,7 @@ const TaskElement = ({ task, onClickConfirmRemoveButton: removeFunction, onClick
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState<boolean>(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
 
     function verifyName(taskName: string): string {
         if (taskName.length < 4) {
@@ -63,15 +64,26 @@ const TaskElement = ({ task, onClickConfirmRemoveButton: removeFunction, onClick
                 </div>}
                 <button onClick={() => setIsEditModalOpen(true)}>Edit task</button>
             </div>
-            {isEditModalOpen && <div className="edit_task_div">
-                <input type="text" onChange={e => {
-                    const newTaskName = verifyName(e.target.value);
-                    setName(newTaskName)
-                }} />
-                <button onClick={() => {
-                    task.taskName = name
-                    setIsEditModalOpen(false);
-                }}>Edit!</button>
+            {isEditModalOpen && <div className="modal_backdrop">
+                <div className="modal_content edit_modal_content">
+                    <input value={name} placeholder='Task name here...' id='task_name_input' type="text" onChange={e => {
+                        setName(e.target.value);
+                    }} />
+                    <input value={description} placeholder='Description' id='task_description_input' type="text" onChange={e => {
+                        setDescription(e.target.value);
+                    }} />
+                    <div className="modal_buttons_div edit_modal_buttons">
+                        <button id="cancel_button" className="modal_buttons" onClick={() => setIsEditModalOpen(false)}>Cancel</button>
+                        <button id="confirm_button" className="modal_buttons" onClick={() => {
+                            const newTaskName = verifyName(name);
+                            task.taskName = newTaskName;
+                            const newTaskDescription = verifyDescription(description);
+                            task.taskDescription = newTaskDescription;
+                            setIsEditModalOpen(false);
+                        }
+                        }>Edit</button>
+                    </div>
+                </div>
             </div>}
         </div>
     )
