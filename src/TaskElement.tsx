@@ -8,16 +8,32 @@ type Props = {
         taskDescription: string,
         situation: 'Open' | 'Closed' | 'Archived'
     }
-    onClickConfirmRemoveButton: React.MouseEventHandler<HTMLButtonElement>
+    onClickConfirmRemoveButton: React.MouseEventHandler<HTMLButtonElement>;
     onClickCheckTask: React.MouseEventHandler<HTMLDivElement>;
 }
 const TaskElement = ({ task, onClickConfirmRemoveButton: removeFunction, onClickCheckTask: checkTaskFunction }: Props) => {
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState<boolean>(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>('');
-    
+
+    function verifyName(taskName: string): string {
+        if (taskName.length < 4) {
+            return 'No title';
+        } else {
+            return taskName;
+        }
+    }
+
+    function verifyDescription(taskDescription: string): string {
+        if (taskDescription.length < 10) {
+            return 'No description';
+        } else {
+            return taskDescription;
+        }
+    }
+
     return (
-        <div className="task_div">
+        <div className={`task_div ${task.situation.toLowerCase()}`}>
             <div className="task_top_div">
                 <div className="task_texts">
                     <p id="task_name" style={{ textDecoration: task.isDone ? 'line-through' : 'none' }}>{task.taskName}</p>
@@ -37,14 +53,21 @@ const TaskElement = ({ task, onClickConfirmRemoveButton: removeFunction, onClick
                         </div>
                         <div className="remove_modal_buttons">
                             <button id="cancel_button" className="modal_buttons" onClick={() => setIsRemoveModalOpen(false)}>Cancel</button>
-                            <button id="confirm_button" className="modal_buttons" onClick={removeFunction}>Remove</button>
+                            <button id="confirm_button" className="modal_buttons" onClick={(e) => {
+                                removeFunction(e);
+                                setIsRemoveModalOpen(false);
+                            } //Essa função executava apenas o setIsRemoveModalOpen(false), mas passando o evento ela voltou a funcionar normalmente, por que?
+                            }>Remove</button>
                         </div>
                     </div>
                 </div>}
                 <button onClick={() => setIsEditModalOpen(true)}>Edit task</button>
             </div>
             {isEditModalOpen && <div className="edit_task_div">
-                <input type="text" onChange={e => setName(e.target.value)} />
+                <input type="text" onChange={e => {
+                    const newTaskName = verifyName(e.target.value);
+                    setName(newTaskName)
+                }} />
                 <button onClick={() => {
                     task.taskName = name
                     setIsEditModalOpen(false);

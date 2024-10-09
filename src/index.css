@@ -158,8 +158,8 @@
 .section_active span {
     color: white;
     font-weight: 100;
-    padding: 0 6px 1px 6px;
-    border-radius: 20px;
+    padding: 0 8px 1px 8px;
+    border-radius: 8px;
     font-size: 13px;
 }
 
@@ -176,10 +176,7 @@
 }
 
 .tasks_div {
-    display: flex;
-    flex-direction: column;
-    padding: 30px 0 30px 0;
-    gap: 30px;
+    margin-top: 30px;
 }
 
 .task_div {
@@ -252,7 +249,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.remove_modal_hr{
+.remove_modal_hr {
     width: 70%;
 }
 
@@ -260,4 +257,8 @@
     gap: 20px;
     display: flex;
     justify-content: end;
+}
+
+.closed {
+    background-color: #D2FAD2;
 }

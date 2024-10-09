@@ -37,6 +37,12 @@ function App() {
   const [description, setDescription] = useState('');
   const [isChecked, setIsChecked] = useState<boolean>(true);
   const [tasksArray, setTasksArray] = useState<Task[]>([]);
+  const closedTasksArray = tasksArray.filter(task => {
+    if (task.situation === 'Closed') return task;
+  });
+  const openTasksArray = tasksArray.filter(task => {
+    if (task.situation === 'Open') return task;
+  });
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
@@ -50,10 +56,6 @@ function App() {
   const dateStr = `${date.getMonth() + 1} /${date.getDay() - 1}/${date.getFullYear()}`
   const dayOfTheWeek = getDayName(dateStr, 'en-us');
 
-  const closedTasksAmount = tasksArray.map(task => {
-    if (task.situation === 'Closed') return task;
-  });
-  console.log(closedTasksAmount)
 
   return (
     <div id='app_container'>
@@ -98,7 +100,7 @@ function App() {
           </div>
         </div>}
       <div className="main">
-        {<TaskSection allTasks={tasksArray.length} openTasks={openTasks} closedTasks={closedTasks} archivedTasks={archivedTasks} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
+        {<TaskSection allTasks={tasksArray.length} openTasks={openTasksArray.length} closedTasks={closedTasksArray.length} archivedTasks={archivedTasks} sectionToRender={sectionToRender} onClickSetAllSection={() => { setSectionToRender('All') }} onClickSetOpenSection={() => { setSectionToRender('Open') }} onClickSetClosedSection={() => { setSectionToRender('Closed') }} onClickSetArchivedSection={() => { setSectionToRender('Archived') }} />}
         <div className="tasks_div">
           {sectionToRender === 'All' && tasksArray.map(task => {
             return (
@@ -121,8 +123,54 @@ function App() {
                 }} />
             )
           })}
+          {sectionToRender === 'Open' && tasksArray.map(task => {
+            if (task.situation === 'Open') {
+              return (
+                <TaskElement task={task}
+                  onClickConfirmRemoveButton={() => {
+                    const temporaryArray = tasksArray.filter(taskToKeep => {
+                      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
+                    });
+                    setTasksArray([...temporaryArray]);
+                  }}
+                  onClickCheckTask={() => {
+                    let closedTasks = 0;
+                    task.isDone = !task.isDone;
+                    task.situation = task.isDone ? 'Closed' : 'Open';
+                    tasksArray.map(t => {
+                      if (t.situation === 'Closed') closedTasks++;
+                    });
+                    setClosedTasks(closedTasks);
+                    setIsChecked(!isChecked);
+                  }} />
+              )
+            }
+          })}
           {sectionToRender === 'Closed' && tasksArray.map(task => {
             if (task.situation === 'Closed') {
+              return (
+                <TaskElement task={task}
+                  onClickConfirmRemoveButton={() => {
+                    const temporaryArray = tasksArray.filter(taskToKeep => {
+                      if (taskToKeep.taskID !== task.taskID) return taskToKeep;
+                    });
+                    setTasksArray([...temporaryArray]);
+                  }}
+                  onClickCheckTask={() => {
+                    let closedTasks = 0;
+                    task.isDone = !task.isDone;
+                    task.situation = task.isDone ? 'Closed' : 'Open';
+                    tasksArray.map(t => {
+                      if (t.situation === 'Closed') closedTasks++;
+                    });
+                    setClosedTasks(closedTasks);
+                    setIsChecked(!isChecked);
+                  }} />
+              )
+            }
+          })}
+          {sectionToRender === 'Archived' && tasksArray.map(task => {
+            if (task.situation === 'Archived') {
               return (
                 <TaskElement task={task}
                   onClickConfirmRemoveButton={() => {
