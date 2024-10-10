@@ -19,7 +19,8 @@ function verifyName(taskName: string): string {
 
 function App() {
   const date = new Date();
-  const dateString = `${date.getMonth() + 1} / ${date.getDay() - 1} / ${date.getFullYear()}`;
+  const dateString = `${date.getMonth() + 1} / ${date.getDate()} / ${date.getFullYear()}`
+  console.log(dateString)
   const dayOfTheWeek = getDayName(dateString, 'en-us');
 
   const [tasksArray, setTasksArray] = useState<Task[]>([]);
@@ -239,7 +240,7 @@ function App() {
       <div id="head_div">
         <div id="greeting_div">
           <h1 className="title_txt">Today's Task</h1>
-          <h2 className="subtitle_txt">{dayOfTheWeek}, {date.getDay()} {date.toLocaleString('en-us', { month: 'long' })}</h2>
+          <h2 className="subtitle_txt">{dayOfTheWeek}, {date.getDate()} {date.toLocaleString('en-us', { month: 'long' })}</h2>
         </div>
         <div id="add_task_button" onClick={() => setIsAddModalOpen(!isAddModalOpen)}>&#x2b; New Task</div>
         {isAddModalOpen && <AddTaskModal
