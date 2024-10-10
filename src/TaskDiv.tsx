@@ -1,13 +1,20 @@
+import { useState } from "react";
 import Task from "./TaskType"
+import EditTaskModal from "./EditTaskModal";
 
 type Props = {
     task: Task;
     checkTask: (id: string) => void;
     archiveTask: (id: string) => void;
     removeTask: (id: string) => void;
+    onChangeNameFunction: React.ChangeEventHandler<HTMLInputElement>;
+    onChangeDescriptionFunction: React.ChangeEventHandler<HTMLInputElement>;
+    editTaskFunction: (id: string) => void;
 }
 
-const TaskDiv = ({ task, checkTask, archiveTask, removeTask }: Props) => {
+const TaskDiv = ({ task, checkTask, archiveTask, removeTask, onChangeNameFunction: handleNameChange, onChangeDescriptionFunction: handleDescriptionChange, editTaskFunction }: Props) => {
+    const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
     return (
         <div className="task_body">
             <div className="task_div_top">
@@ -41,7 +48,7 @@ const TaskDiv = ({ task, checkTask, archiveTask, removeTask }: Props) => {
                         32.003906 44.359375 32 44 L 32 11 C 32.011719 10.710938 31.894531 10.433594 31.6875 10.238281 C 31.476563 10.039063 31.191406 9.941406 30.90625 9.96875 Z"></path>
                     </svg>
                 </div>
-                <div className="edit_task_button">
+                <div onClick={() => setEditModalOpen(true)} className="edit_task_button">
                     <svg className="edit_task_svg task_div_svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
                         <path d="M 43.125 2 C 41.878906 2 40.636719 2.488281 39.6875 3.4375 L 38.875 4.25 L 45.75 11.125 C 45.746094 11.128906 46.5625 10.3125 46.5625 10.3125C 48.464844 8.410156 48.460938 5.335938 46.5625 3.4375 C 45.609375 2.488281 44.371094 2 43.125 2 Z
                         M 37.34375 6.03125 C 37.117188 6.0625 36.90625 6.175781 36.75 6.34375 L 4.3125 38.8125 C 4.183594 38.929688 4.085938 39.082031 4.03125 39.25 L 2.03125 46.75 C 1.941406 47.09375 2.042969 47.457031 2.292969 47.707031 C 2.542969 47.957031 2.90625
@@ -55,7 +62,16 @@ const TaskDiv = ({ task, checkTask, archiveTask, removeTask }: Props) => {
                     </svg>
                 </div>
             </div>
-        </div >
+            {editModalOpen && <EditTaskModal
+                onChangeNameFunction={handleNameChange}
+                onChangeDescriptionFunction={handleDescriptionChange}
+                cancelTaskEditFunction={() => setEditModalOpen(false)}
+                editTaskFunction={() => {
+                    editTaskFunction(task.taskID)
+                    setEditModalOpen(false);
+                }}
+            />}
+        </div>
     )
 }
 

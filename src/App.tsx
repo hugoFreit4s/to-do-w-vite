@@ -23,8 +23,8 @@ function App() {
   const dayOfTheWeek = getDayName(dateString, 'en-us');
 
   const [tasksArray, setTasksArray] = useState<Task[]>([]);
-  const [taskName, setTaskName] = useState<string>('');
-  const [taskDescription, setTaskDescription] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
 
@@ -53,6 +53,21 @@ function App() {
               setTasksArray(() => {
                 const auxArray = tasksArray.filter(t => t.taskID !== id);
                 return auxArray
+              })
+            }}
+            onChangeNameFunction={(e) => {
+              setName(e.target.value);
+            }}
+            onChangeDescriptionFunction={(e) => {
+              setDescription(e.target.value);
+            }}
+            editTaskFunction={(id) => {
+              setTasksArray(prev => {
+                const taskName = verifyName(name);
+                const auxArray = [...prev];
+                const index = auxArray.findIndex(i => i.taskID === id);
+                auxArray[index] = { ...auxArray[index], taskName: taskName, taskDescription: description };
+                return auxArray;
               })
             }} />
         })}
@@ -86,6 +101,20 @@ function App() {
                 setTasksArray(() => {
                   const auxArray = tasksArray.filter(t => t.taskID !== id);
                   return auxArray
+                })
+              }}
+              onChangeNameFunction={(e) => {
+                setName(e.target.value);
+              }}
+              onChangeDescriptionFunction={(e) => {
+                setDescription(e.target.value);
+              }}
+              editTaskFunction={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], taskName: name, taskDescription: description };
+                  return auxArray;
                 })
               }} />
           }
@@ -130,6 +159,20 @@ function App() {
                   const auxArray = tasksArray.filter(t => t.taskID !== id);
                   return auxArray
                 })
+              }}
+              onChangeNameFunction={(e) => {
+                setName(e.target.value);
+              }}
+              onChangeDescriptionFunction={(e) => {
+                setDescription(e.target.value);
+              }}
+              editTaskFunction={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], taskName: name, taskDescription: description };
+                  return auxArray;
+                })
               }} />
           }
         })}
@@ -170,6 +213,20 @@ function App() {
                   const auxArray = tasksArray.filter(t => t.taskID !== id);
                   return auxArray
                 })
+              }}
+              onChangeNameFunction={(e) => {
+                setName(e.target.value);
+              }}
+              onChangeDescriptionFunction={(e) => {
+                setDescription(e.target.value);
+              }}
+              editTaskFunction={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], taskName: name, taskDescription: description };
+                  return auxArray;
+                })
               }} />
           }
         })}
@@ -187,21 +244,21 @@ function App() {
         <div id="add_task_button" onClick={() => setIsAddModalOpen(!isAddModalOpen)}>&#x2b; New Task</div>
         {isAddModalOpen && <AddTaskModal
           onChangeNameFunction={(e) => {
-            setTaskName(e.target.value);
+            setName(e.target.value);
           }}
           onChangeDescriptionFunction={(e) => {
-            setTaskDescription(e.target.value);
+            setDescription(e.target.value);
           }}
           addTaskFunction={() => {
-            const name = verifyName(taskName);
-            const newTask: Task = { taskName: name, taskDescription: taskDescription, isDone: false, taskID: crypto.randomUUID(), taskSituation: 'Open' };
+            const taskName = verifyName(name);
+            const newTask: Task = { taskName: taskName, taskDescription: description, isDone: false, taskID: crypto.randomUUID(), taskSituation: 'Open' };
             const auxArray = [...tasksArray, newTask];
             setTasksArray(auxArray);
-            setTaskName('');
+            setName('');
             setIsAddModalOpen(false);
           }}
           cancelTaskAddFunction={() => setIsAddModalOpen(false)}
-          inputValue={taskName}
+          inputValue={name}
         />}
       </div>
 
