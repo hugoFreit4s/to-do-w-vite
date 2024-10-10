@@ -32,14 +32,23 @@ function App() {
     return (
       <div className='task_div'>
         {tasksArray.map(task => {
-          return <TaskDiv task={task} checkTask={(id) => {
-            setTasksArray(prev => {
-              const auxArray = [...prev];
-              const index = auxArray.findIndex(i => i.taskID === id);
-              auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
-              return auxArray;
-            });
-          }} />
+          return <TaskDiv task={task}
+            checkTask={(id) => {
+              setTasksArray(prev => {
+                const auxArray = [...prev];
+                const index = auxArray.findIndex(i => i.taskID === id);
+                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
+                return auxArray;
+              });
+            }}
+            archiveTask={(id) => {
+              setTasksArray(prev => {
+                const auxArray = [...prev];
+                const index = auxArray.findIndex(i => i.taskID === id);
+                auxArray[index] = { ...auxArray[index], taskSituation: 'Archived' };
+                return auxArray;
+              });
+            }} />
         })}
       </div>
     )
@@ -50,14 +59,23 @@ function App() {
       <div className='task_div'>
         {tasksArray.map(task => {
           if (task.taskSituation === 'Open') {
-            return <TaskDiv task={task} checkTask={(id) => {
-              setTasksArray(prev => {
-                const auxArray = [...prev];
-                const index = auxArray.findIndex(i => i.taskID === id);
-                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
-                return auxArray;
-              });
-            }} />
+            return <TaskDiv task={task}
+              checkTask={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
+                  return auxArray;
+                });
+              }}
+              archiveTask={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], taskSituation: 'Archived' };
+                  return auxArray;
+                });
+              }} />
           }
         })}
       </div>
@@ -69,14 +87,32 @@ function App() {
       <div className='task_div'>
         {tasksArray.map(task => {
           if (task.taskSituation === 'Closed') {
-            return <TaskDiv task={task} checkTask={(id) => {
-              setTasksArray(prev => {
-                const auxArray = [...prev];
-                const index = auxArray.findIndex(i => i.taskID === id);
-                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
-                return auxArray;
-              });
-            }} />
+            return <TaskDiv task={task}
+              checkTask={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
+                  return auxArray;
+                });
+              }}
+              archiveTask={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  let currentTask = auxArray[index];
+                  if (currentTask.taskSituation === 'Archived') {
+                    if (currentTask.isDone) {
+                      currentTask = { ...currentTask, taskSituation: 'Closed' }
+                    } else {
+                      currentTask = { ...currentTask, taskSituation: 'Open' }
+                    }
+                  } else {
+                    currentTask.taskSituation = 'Archived';
+                  }
+                  return auxArray;
+                });
+              }} />
           }
         })}
       </div>
@@ -88,14 +124,29 @@ function App() {
       <div className='task_div'>
         {tasksArray.map(task => {
           if (task.taskSituation === 'Archived') {
-            return <TaskDiv task={task} checkTask={(id) => {
-              setTasksArray(prev => {
-                const auxArray = [...prev];
-                const index = auxArray.findIndex(i => i.taskID === id);
-                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone };
-                return auxArray;
-              });
-            }} />
+            return <TaskDiv task={task}
+              checkTask={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone };
+                  return auxArray;
+                });
+              }}
+              archiveTask={(id) => {
+                setTasksArray(prev => {
+                  const auxArray = [...prev];
+                  const index = auxArray.findIndex(i => i.taskID === id);
+                  if (auxArray[index].taskSituation === 'Archived' && auxArray[index].isDone) {
+                    auxArray[index] = { ...auxArray[index], taskSituation: 'Closed' }
+                  } else if (auxArray[index].taskSituation === 'Archived' && !auxArray[index].isDone) {
+                    auxArray[index] = { ...auxArray[index], taskSituation: 'Open' }
+                  } else if (auxArray[index].taskSituation !== 'Archived') {
+                    auxArray[index].taskSituation = 'Archived';
+                  }
+                  return auxArray;
+                });
+              }} />
           }
         })}
       </div>
@@ -149,7 +200,7 @@ function App() {
       {renderedSection === 'All' && <div id='all_tasks_div'>{renderAllTasks()}</div>}
       {renderedSection === 'Open' && <div id='all_tasks_div'>{renderOpenTasks()}</div>}
       {renderedSection === 'Closed' && <div id='all_tasks_div'>{renderClosedTasks()}</div>}
-      {renderedSection === 'Open' && <div id='all_tasks_div'>{renderArchivedTasks()}</div>}
+      {renderedSection === 'Archived' && <div id='all_tasks_div'>{renderArchivedTasks()}</div>}
     </div>
   )
 }

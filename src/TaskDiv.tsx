@@ -2,10 +2,11 @@ import Task from "./TaskType"
 
 type Props = {
     task: Task;
-        checkTask: (id: string) => void;
+    checkTask: (id: string) => void;
+    archiveTask: (id: string) => void;
 }
 
-const TaskDiv = ({ task, checkTask }: Props) => {
+const TaskDiv = ({ task, checkTask, archiveTask }: Props) => {
     return (
         <div className="task_body">
             <div className="task_div_top">
@@ -13,7 +14,7 @@ const TaskDiv = ({ task, checkTask }: Props) => {
                     <p className="task_main_txt" style={{ textDecoration: task.isDone ? 'line-through' : 'none' }}>{task.taskName}</p>
                     <p className="task_sub_txt">{task.taskDescription}</p>
                 </div>
-                <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={() => {checkTask(task.taskID)}}>&#x2714;</div>
+                <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={() => checkTask(task.taskID)}>&#x2714;</div>
             </div>
             <hr />
             <div className="task_div_bottom">
@@ -47,7 +48,7 @@ const TaskDiv = ({ task, checkTask }: Props) => {
                         44.09375 L 5.90625 40.03125 L 38.1875 7.75 C 38.488281 7.460938 38.578125 7.011719 38.410156 6.628906 C 38.242188 6.246094 37.855469 6.007813 37.4375 6.03125 C 37.40625 6.03125 37.375 6.03125 37.34375 6.03125 Z"></path>
                     </svg>
                 </div>
-                <div className="archive_task_button">
+                <div className="archive_task_button" onClick={() => archiveTask(task.taskID)}>
                     <svg className="archive_task_svg task_div_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2z"></path>
                     </svg>
