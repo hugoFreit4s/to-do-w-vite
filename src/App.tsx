@@ -48,6 +48,12 @@ function App() {
                 auxArray[index] = { ...auxArray[index], taskSituation: 'Archived' };
                 return auxArray;
               });
+            }}
+            removeTask={(id) => {
+              setTasksArray(() => {
+                const auxArray = tasksArray.filter(t => t.taskID !== id);
+                return auxArray
+              })
             }} />
         })}
       </div>
@@ -75,6 +81,12 @@ function App() {
                   auxArray[index] = { ...auxArray[index], taskSituation: 'Archived' };
                   return auxArray;
                 });
+              }}
+              removeTask={(id) => {
+                setTasksArray(() => {
+                  const auxArray = tasksArray.filter(t => t.taskID !== id);
+                  return auxArray
+                })
               }} />
           }
         })}
@@ -112,6 +124,12 @@ function App() {
                   }
                   return auxArray;
                 });
+              }}
+              removeTask={(id) => {
+                setTasksArray(() => {
+                  const auxArray = tasksArray.filter(t => t.taskID !== id);
+                  return auxArray
+                })
               }} />
           }
         })}
@@ -146,6 +164,12 @@ function App() {
                   }
                   return auxArray;
                 });
+              }}
+              removeTask={(id) => {
+                setTasksArray(() => {
+                  const auxArray = tasksArray.filter(t => t.taskID !== id);
+                  return auxArray
+                })
               }} />
           }
         })}

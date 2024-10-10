@@ -4,9 +4,10 @@ type Props = {
     task: Task;
     checkTask: (id: string) => void;
     archiveTask: (id: string) => void;
+    removeTask: (id: string) => void;
 }
 
-const TaskDiv = ({ task, checkTask, archiveTask }: Props) => {
+const TaskDiv = ({ task, checkTask, archiveTask, removeTask }: Props) => {
     return (
         <div className="task_body">
             <div className="task_div_top">
@@ -18,7 +19,7 @@ const TaskDiv = ({ task, checkTask, archiveTask }: Props) => {
             </div>
             <hr />
             <div className="task_div_bottom">
-                <div className="delete_task_button">
+                <div onClick={() => removeTask(task.taskID)} className="delete_task_button">
                     <svg className="remove_task_svg task_div_svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
                         <path d="M 21 0 C 19.355469 0 18 1.355469 18 3 L 18 5 L 10.1875 5 C 10.0625
                         4.976563 9.9375 4.976563 9.8125 5 L 8 5 C 7.96875
