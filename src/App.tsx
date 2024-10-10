@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import AddTaskModal from './AddTaskModal';
-import TaskSections from './TasksSections';
 import Task from './TaskType';
 import TaskDiv from './TaskDiv';
 
@@ -29,18 +28,75 @@ function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
 
-  function checkTask(task: Task) {
-    const index = tasksArray.indexOf(task);
-    const auxArray: Task[] = tasksArray;
-    auxArray[index].isDone = auxArray[index].isDone === true ? false : true;
-    setTasksArray(auxArray);
-  }
-
   function renderAllTasks() {
     return (
       <div className='task_div'>
         {tasksArray.map(task => {
-          return <TaskDiv task={task} functions={{ checkTask: () => { checkTask(task) } }} />
+          return <TaskDiv task={task} checkTask={(id) => {
+            setTasksArray(prev => {
+              const auxArray = [...prev];
+              const index = auxArray.findIndex(i => i.taskID === id);
+              auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
+              return auxArray;
+            });
+          }} />
+        })}
+      </div>
+    )
+  }
+
+  function renderOpenTasks() {
+    return (
+      <div className='task_div'>
+        {tasksArray.map(task => {
+          if (task.taskSituation === 'Open') {
+            return <TaskDiv task={task} checkTask={(id) => {
+              setTasksArray(prev => {
+                const auxArray = [...prev];
+                const index = auxArray.findIndex(i => i.taskID === id);
+                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
+                return auxArray;
+              });
+            }} />
+          }
+        })}
+      </div>
+    )
+  }
+
+  function renderClosedTasks() {
+    return (
+      <div className='task_div'>
+        {tasksArray.map(task => {
+          if (task.taskSituation === 'Closed') {
+            return <TaskDiv task={task} checkTask={(id) => {
+              setTasksArray(prev => {
+                const auxArray = [...prev];
+                const index = auxArray.findIndex(i => i.taskID === id);
+                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone, taskSituation: !auxArray[index].isDone ? 'Closed' : 'Open' };
+                return auxArray;
+              });
+            }} />
+          }
+        })}
+      </div>
+    )
+  }
+
+  function renderArchivedTasks() {
+    return (
+      <div className='task_div'>
+        {tasksArray.map(task => {
+          if (task.taskSituation === 'Archived') {
+            return <TaskDiv task={task} checkTask={(id) => {
+              setTasksArray(prev => {
+                const auxArray = [...prev];
+                const index = auxArray.findIndex(i => i.taskID === id);
+                auxArray[index] = { ...auxArray[index], isDone: !auxArray[index].isDone };
+                return auxArray;
+              });
+            }} />
+          }
         })}
       </div>
     )
@@ -73,21 +129,27 @@ function App() {
           inputValue={taskName}
         />}
       </div>
-      <TaskSections
-        allTasksAmount={tasksArray.length}
-        openTasksAmount={0}
-        closedTasksAmount={0}
-        archivedTasksAmount={0}
-        functions={
-          {
-            toggleAllSection: () => { setRenderedSection('All') },
-            toggleOpenSection: () => { setRenderedSection('Open') },
-            toggleClosedSection: () => { setRenderedSection('Closed') },
-            toggleArchivedSection: () => { setRenderedSection('Archived') }
-          }
-        }
-      />
-      {renderedSection && <div id='all_tasks_div'>{renderAllTasks()}</div>}
+
+      <div id="sections_div">
+        <div onClick={() => setRenderedSection('All')} className={`section ${renderedSection === 'All' ? 'active_section' : 'inactive_section'}`}>All<span className={`section ${renderedSection === 'All' ? 'active_span' : 'inactive_span'}`}>{tasksArray.length}</span></div>
+        <div onClick={() => setRenderedSection('Open')} className={`section ${renderedSection === 'Open' ? 'active_section' : 'inactive_section'}`}>Open<span className={`section ${renderedSection === 'Open' ? 'active_span' : 'inactive_span'}`}>{(() => {
+          const auxArray = tasksArray.filter(task => task.taskSituation === 'Open');
+          return auxArray.length;
+        })()}</span></div>
+        <div onClick={() => setRenderedSection('Closed')} className={`section ${renderedSection === 'Closed' ? 'active_section' : 'inactive_section'}`}>Closed<span className={`section ${renderedSection === 'Closed' ? 'active_span' : 'inactive_span'}`}>{(() => {
+          const auxArray = tasksArray.filter(task => task.taskSituation === 'Closed');
+          return auxArray.length;
+        })()}</span></div>
+        <div onClick={() => setRenderedSection('Archived')} className={`section ${renderedSection === 'Archived' ? 'active_section' : 'inactive_section'}`}>Archived<span className={`section ${renderedSection === 'Archived' ? 'active_span' : 'inactive_span'}`}>{(() => {
+          const auxArray = tasksArray.filter(task => task.taskSituation === 'Archived');
+          return auxArray.length;
+        })()}</span></div>
+      </div>
+
+      {renderedSection === 'All' && <div id='all_tasks_div'>{renderAllTasks()}</div>}
+      {renderedSection === 'Open' && <div id='all_tasks_div'>{renderOpenTasks()}</div>}
+      {renderedSection === 'Closed' && <div id='all_tasks_div'>{renderClosedTasks()}</div>}
+      {renderedSection === 'Open' && <div id='all_tasks_div'>{renderArchivedTasks()}</div>}
     </div>
   )
 }

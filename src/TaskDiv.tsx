@@ -1,22 +1,19 @@
-import React, { useState } from "react";
 import Task from "./TaskType"
 
 type Props = {
     task: Task;
-    functions: {
-        checkTask: React.MouseEventHandler<HTMLDivElement>;
-    }
+        checkTask: (id: string) => void;
 }
 
-const TaskDiv = ({ task, functions }: Props) => {
+const TaskDiv = ({ task, checkTask }: Props) => {
     return (
         <div className="task_body">
             <div className="task_div_top">
                 <div className="task_texts">
-                    <p className="task_main_txt">{task.taskName}</p>
+                    <p className="task_main_txt" style={{ textDecoration: task.isDone ? 'line-through' : 'none' }}>{task.taskName}</p>
                     <p className="task_sub_txt">{task.taskDescription}</p>
                 </div>
-                <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={functions.checkTask}>&#x2714;</div>
+                <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={() => {checkTask(task.taskID)}}>&#x2714;</div>
             </div>
             <hr />
             <div className="task_div_bottom">
@@ -56,7 +53,7 @@ const TaskDiv = ({ task, functions }: Props) => {
                     </svg>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
