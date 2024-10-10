@@ -13,7 +13,7 @@ const TaskDiv = ({ task, functions }: Props) => {
         <div className="task_body">
             <div className="task_div_top">
                 <div className="task_texts">
-                    <p className="task_main_txt">{task.taskName}</p>
+                    <p className="task_main_txt" style={{textDecoration: task.isDone ? 'line-through' : 'none'}}>{task.taskName}</p>
                     <p className="task_sub_txt">{task.taskDescription}</p>
                 </div>
                 <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={functions.checkTask}>&#x2714;</div>

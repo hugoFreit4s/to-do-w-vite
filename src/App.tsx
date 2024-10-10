@@ -24,23 +24,51 @@ function App() {
   const dayOfTheWeek = getDayName(dateString, 'en-us');
 
   const [tasksArray, setTasksArray] = useState<Task[]>([]);
+  const [openTasksArray, setOpenTasksArray] = useState<Task[]>([]);
   const [taskName, setTaskName] = useState<string>('');
   const [taskDescription, setTaskDescription] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
 
-  function checkTask(task: Task) {
-    const index = tasksArray.indexOf(task);
-    const auxArray: Task[] = tasksArray;
-    auxArray[index].isDone = auxArray[index].isDone === true ? false : true;
-    setTasksArray(auxArray);
-  }
-
   function renderAllTasks() {
     return (
       <div className='task_div'>
         {tasksArray.map(task => {
-          return <TaskDiv task={task} functions={{ checkTask: () => { checkTask(task) } }} />
+          return <TaskDiv task={task} functions={{
+            checkTask: () => {
+              const auxArray = [...tasksArray];
+              auxArray.map(taskToChange => {
+                if (taskToChange === task) {
+                  taskToChange.isDone = !taskToChange.isDone;
+                  taskToChange.taskSituation = 'Closed';
+                }
+              });
+              setTasksArray(auxArray);
+            }
+          }} />
+        })}
+      </div>
+    )
+  }
+
+  function renderOpenTasks() {
+    return (
+      <div className='task_div'>
+        {tasksArray.map(task => {
+          if (task.taskSituation === 'Open') {
+            return <TaskDiv task={task} functions={{
+              checkTask: () => {
+                const auxArray = [...tasksArray];
+                auxArray.map(taskToChange => {
+                  if (taskToChange === task) {
+                    taskToChange.isDone = !taskToChange.isDone;
+                    taskToChange.taskSituation = 'Closed';
+                  }
+                });
+                setTasksArray(auxArray);
+              }
+            }} />
+          }
         })}
       </div>
     )
@@ -75,7 +103,7 @@ function App() {
       </div>
       <TaskSections
         allTasksAmount={tasksArray.length}
-        openTasksAmount={0}
+        openTasksAmount={openTasksArray.length}
         closedTasksAmount={0}
         archivedTasksAmount={0}
         functions={
@@ -87,7 +115,8 @@ function App() {
           }
         }
       />
-      {renderedSection && <div id='all_tasks_div'>{renderAllTasks()}</div>}
+      {renderedSection === 'All' && <div id='all_tasks_div'>{renderAllTasks()}</div>}
+      {renderedSection === 'Open' && <div id='all_tasks_div'>{renderOpenTasks()}</div>}
     </div>
   )
 }
