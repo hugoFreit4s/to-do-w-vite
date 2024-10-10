@@ -148,8 +148,12 @@ button {
     justify-content: space-between;
 }
 
+.section,
+.section span {
+    font-weight: 600;
+}
+
 .section {
-    color: #aaaab0;
     display: flex;
     align-items: end;
     gap: 5px;
@@ -157,15 +161,33 @@ button {
 }
 
 .section span {
-    background-color: #aaaab0;
-    color: white;
     padding: 0 6px 0 6px;
     height: fit-content;
     border-radius: 10px;
     font-size: 13px;
 }
 
+.active_section {
+    color: #025efc
+}
+
+.inactive_section {
+    color: #aaaab0;
+}
+
+.active_span {
+    background-color: #025efc;
+    color: white;
+}
+
+.inactive_span {
+    background-color: #aaaab0;
+    color: white;
+}
+
 #all_tasks_div {
+    display: flex;
+    flex-direction: column;
     margin-top: 40px;
     width: 100%;
 }
@@ -174,8 +196,10 @@ button {
     display: flex;
     flex-direction: column;
     padding: 30px 20px 30px 20px;
-    border-radius: 7px;
+    border-radius: 15px;
     box-shadow: 0 5px 20px #aaaab0;
+    margin: 20px 0 20px 0;
+    gap: 10px;
 }
 
 .task_div_top {
@@ -199,9 +223,10 @@ button {
 
 .task_checkcircle {
     border-radius: 20px;
-    padding: 0px 5px 0px 5px;
+    padding: 2px 8px 2px 8px;
     cursor: pointer;
     user-select: none;
+    font-size: 20px;
 }
 
 .task_checkcircle_inactive {
@@ -223,9 +248,11 @@ button {
 .task_div_bottom {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .task_div_svg {
     height: 25px;
     width: fit-content;
+    cursor: pointer;
 }

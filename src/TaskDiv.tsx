@@ -1,26 +1,32 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Task from "./TaskType"
+import EditTaskModal from "./EditTaskModal";
 
 type Props = {
     task: Task;
-    functions: {
-        checkTask: React.MouseEventHandler<HTMLDivElement>;
-    }
+    checkTask: (id: string) => void;
+    archiveTask: (id: string) => void;
+    removeTask: (id: string) => void;
+    onChangeNameFunction: React.ChangeEventHandler<HTMLInputElement>;
+    onChangeDescriptionFunction: React.ChangeEventHandler<HTMLInputElement>;
+    editTaskFunction: (id: string) => void;
 }
 
-const TaskDiv = ({ task, functions }: Props) => {
+const TaskDiv = ({ task, checkTask, archiveTask, removeTask, onChangeNameFunction: handleNameChange, onChangeDescriptionFunction: handleDescriptionChange, editTaskFunction }: Props) => {
+    const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
     return (
         <div className="task_body">
             <div className="task_div_top">
                 <div className="task_texts">
-                    <p className="task_main_txt" style={{textDecoration: task.isDone ? 'line-through' : 'none'}}>{task.taskName}</p>
+                    <p className="task_main_txt" style={{ textDecoration: task.isDone ? 'line-through' : 'none' }}>{task.taskName}</p>
                     <p className="task_sub_txt">{task.taskDescription}</p>
                 </div>
-                <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={functions.checkTask}>&#x2714;</div>
+                <div className={`task_checkcircle ${task.isDone ? 'task_checkcircle_active' : 'task_checkcircle_inactive'}`} onClick={() => checkTask(task.taskID)}>&#x2714;</div>
             </div>
             <hr />
             <div className="task_div_bottom">
-                <div className="delete_task_button">
+                <div onClick={() => removeTask(task.taskID)} className="delete_task_button">
                     <svg className="remove_task_svg task_div_svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
                         <path d="M 21 0 C 19.355469 0 18 1.355469 18 3 L 18 5 L 10.1875 5 C 10.0625
                         4.976563 9.9375 4.976563 9.8125 5 L 8 5 C 7.96875
@@ -42,7 +48,7 @@ const TaskDiv = ({ task, functions }: Props) => {
                         32.003906 44.359375 32 44 L 32 11 C 32.011719 10.710938 31.894531 10.433594 31.6875 10.238281 C 31.476563 10.039063 31.191406 9.941406 30.90625 9.96875 Z"></path>
                     </svg>
                 </div>
-                <div className="edit_task_button">
+                <div onClick={() => setEditModalOpen(true)} className="edit_task_button">
                     <svg className="edit_task_svg task_div_svg" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
                         <path d="M 43.125 2 C 41.878906 2 40.636719 2.488281 39.6875 3.4375 L 38.875 4.25 L 45.75 11.125 C 45.746094 11.128906 46.5625 10.3125 46.5625 10.3125C 48.464844 8.410156 48.460938 5.335938 46.5625 3.4375 C 45.609375 2.488281 44.371094 2 43.125 2 Z
                         M 37.34375 6.03125 C 37.117188 6.0625 36.90625 6.175781 36.75 6.34375 L 4.3125 38.8125 C 4.183594 38.929688 4.085938 39.082031 4.03125 39.25 L 2.03125 46.75 C 1.941406 47.09375 2.042969 47.457031 2.292969 47.707031 C 2.542969 47.957031 2.90625
@@ -50,12 +56,21 @@ const TaskDiv = ({ task, functions }: Props) => {
                         44.09375 L 5.90625 40.03125 L 38.1875 7.75 C 38.488281 7.460938 38.578125 7.011719 38.410156 6.628906 C 38.242188 6.246094 37.855469 6.007813 37.4375 6.03125 C 37.40625 6.03125 37.375 6.03125 37.34375 6.03125 Z"></path>
                     </svg>
                 </div>
-                <div className="archive_task_button">
+                <div className="archive_task_button" onClick={() => archiveTask(task.taskID)}>
                     <svg className="archive_task_svg task_div_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2z"></path>
                     </svg>
                 </div>
             </div>
+            {editModalOpen && <EditTaskModal
+                onChangeNameFunction={handleNameChange}
+                onChangeDescriptionFunction={handleDescriptionChange}
+                cancelTaskEditFunction={() => setEditModalOpen(false)}
+                editTaskFunction={() => {
+                    editTaskFunction(task.taskID)
+                    setEditModalOpen(false);
+                }}
+            />}
         </div>
     )
 }
