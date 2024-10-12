@@ -54,7 +54,14 @@ function App() {
       </div>
       <div className="tasks_div">
         {filteredTasksArr.map(task => {
-          return <TaskDiv task={task} />
+          return <TaskDiv
+            task={task}
+            removeTask={() => {
+              setTasksArr(prev => {
+                const auxArr = [...prev];
+                return auxArr.filter(t => t.taskID !== task.taskID);
+              })
+            }} />
         })}
       </div>
     </div>

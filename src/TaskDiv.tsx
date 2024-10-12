@@ -2,9 +2,10 @@ import Task from "./TaskType";
 
 type Props = {
     task: Task;
+    removeTask: () => void;
 }
 
-const TaskDiv = ({ task }: Props) => {
+const TaskDiv = ({ task, removeTask }: Props) => {
     return (
         <div className="task_div">
             <div className="task_top_div">
@@ -15,7 +16,7 @@ const TaskDiv = ({ task }: Props) => {
                 <div className="task_checkcircle">&#10003;</div>
             </div>
             <div className="task_bottom_div">
-                <div className="remove_task_btn">remove</div>
+                <div className="remove_task_btn" onClick={removeTask}>remove</div>
                 <div className="edit_task_btn">edit</div>
                 <div className="archive_task_btn">arc</div>
             </div>
