@@ -8,6 +8,7 @@ function App() {
   const [inputNewTaskName, setInputNewTaskName] = useState<string>('');
   const [inputNewTaskDescription, setInputNewTaskDescription] = useState<string>('');
   const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
+
   useEffect(() => {
     if (renderedSection === 'All') {
       setFilteredTasksArr([...tasksArr]);
@@ -60,6 +61,22 @@ function App() {
               setTasksArr(prev => {
                 const auxArr = [...prev];
                 return auxArr.filter(t => t.taskID !== task.taskID);
+              })
+            }}
+            archiveTask={() => {
+              setTasksArr(prev => {
+                let newSituation: 'Open' | 'Closed' | 'Archived';
+                if (task.taskSituation !== 'Archived') {
+                  newSituation = 'Archived';
+                } else if (task.isDone === false) {
+                  newSituation = 'Open';
+                } else {
+                  newSituation = 'Closed';
+                }
+                let auxArr: Task[] = [...prev];
+                const index = auxArr.findIndex(i => i.taskID === task.taskID);
+                auxArr[index] = { ...auxArr[index], taskSituation: newSituation };
+                return auxArr;
               })
             }} />
         })}
