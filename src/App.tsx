@@ -57,6 +57,14 @@ function App() {
         {filteredTasksArr.map(task => {
           return <TaskDiv
             task={task}
+            checkTask={() => {
+              setTasksArr(prev => {
+                const auxArr = [...prev];
+                const index = auxArr.findIndex(i => i.taskID === task.taskID);
+                auxArr[index] = { ...auxArr[index], isDone: !auxArr[index].isDone }
+                return auxArr;
+              })
+            }}
             removeTask={() => {
               setTasksArr(prev => {
                 const auxArr = [...prev];
