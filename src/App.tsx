@@ -86,6 +86,24 @@ function App() {
                 auxArr[index] = { ...auxArr[index], taskSituation: newSituation };
                 return auxArr;
               })
+            }}
+            handleNameChange={(newName) => {
+              setInputNewTaskName(newName)
+            }}
+            handleDescriptionChange={(newDescription) => {
+              setInputNewTaskDescription(newDescription);
+            }}
+            confirmTaskEdit={() => {
+              setTasksArr(prev => {
+                const newName = verifyTaskName(inputNewTaskName);
+                const newDescription = verifyTaskDescription(inputNewTaskDescription);
+                const auxArr = [...prev];
+                const index = auxArr.findIndex(i => i.taskID === task.taskID);
+                auxArr[index] = { ...auxArr[index], taskName: newName, taskDescription: newDescription }
+                setInputNewTaskName('');
+                setInputNewTaskDescription('');
+                return auxArr;
+              })
             }} />
         })}
       </div>
