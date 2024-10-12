@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
 import Task from "./TaskType";
+import TaskDiv from "./TaskDiv";
 
 function App() {
-  function verifyTaskName(newName: string): string {
-    if (newName.length <= 3) {
-      return 'No title';
-    } else {
-      return newName;
-    }
-  }
-
   const [tasksArr, setTasksArr] = useState<Task[]>([]);
   const [filteredTasksArr, setFilteredTasksArr] = useState<Task[]>([]);
-  const [inputNewTask, setInputNewTask] = useState<string>('');
+  const [inputNewTaskName, setInputNewTaskName] = useState<string>('');
+  const [inputNewTaskDescription, setInputNewTaskDescription] = useState<string>('');
   const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
   useEffect(() => {
     if (renderedSection === 'All') {
@@ -22,15 +16,36 @@ function App() {
     }
   }, [tasksArr, renderedSection]);
 
+
+  function verifyTaskName(newName: string): string {
+    if (newName.length <= 3) {
+      return 'Title must have more than 3 chars';
+    } else {
+      return newName;
+    }
+  }
+
+  function verifyTaskDescription(newDescription: string): string {
+    if (newDescription.length <= 5) {
+      return 'Description must have more than 5 chars';
+    } else {
+      return newDescription;
+    }
+  }
+
   return (
     <div className="main">
       <div className="top_div">
         <input type="text" name="task_name" id="task_name" onChange={(e) => {
-          setInputNewTask(e.target.value);
+          setInputNewTaskName(e.target.value);
+        }} />
+        <input type="text" name="task_description" id="task_description" onChange={(e) => {
+          setInputNewTaskDescription(e.target.value);
         }} />
         <button onClick={() => {
-          const newName = verifyTaskName(inputNewTask);
-          const newTask: Task = { taskName: newName, taskDescription: 'description', taskID: crypto.randomUUID(), isDone: false, taskSituation: 'Open' }
+          const newName = verifyTaskName(inputNewTaskName);
+          const newDescription = verifyTaskDescription(inputNewTaskDescription);
+          const newTask: Task = { taskName: newName, taskDescription: newDescription, taskID: crypto.randomUUID(), isDone: false, taskSituation: 'Open' }
           setTasksArr(prev => {
             const auxArr = [...prev, newTask];
             return auxArr;
@@ -39,7 +54,7 @@ function App() {
       </div>
       <div className="tasks_div">
         {filteredTasksArr.map(task => {
-          return <p>{task.taskName}</p>
+          return <TaskDiv task={task} />
         })}
       </div>
     </div>
