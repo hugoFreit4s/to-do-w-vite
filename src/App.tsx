@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Task from "./TaskType";
 import TaskDiv from "./TaskDiv";
+import TaskSections from "./TaskSections";
 
 function App() {
   const [tasksArr, setTasksArr] = useState<Task[]>([]);
@@ -52,7 +53,18 @@ function App() {
             return auxArr;
           })
         }}>Add text</button>
+
       </div>
+      <TaskSections
+        allTasksAmount={tasksArr.length}
+        archivedTasksAmount={0}
+        closedTasksAmount={0}
+        openTasksAmount={0}
+        selectSectionToRender={(section) => {
+          setRenderedSection(section);
+          console.log(renderedSection);
+        }} />
+
       <div className="tasks_div">
         {filteredTasksArr.map(task => {
           return <TaskDiv

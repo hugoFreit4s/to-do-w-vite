@@ -33,7 +33,10 @@ const TaskDiv = ({ task, checkTask, removeTask, archiveTask, handleNameChange, h
                     <div className="modal_content">
                         <input type="text" onChange={(e) => handleNameChange(e.target.value)} />
                         <input type="text" onChange={(e) => handleDescriptionChange(e.target.value)} />
-                        <button onClick={confirmTaskEdit}>Edit task!</button>
+                        <button onClick={() => {
+                            confirmTaskEdit();
+                            setEditModalOpen(false);
+                        }}>Edit task!</button>
                     </div>
                 </div>}
         </div>
