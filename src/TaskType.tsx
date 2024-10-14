@@ -1,9 +1,9 @@
 type Task = {
-    taskName: string,
-    taskDescription: string,
-    taskID: string,
+    name: string,
+    description: string,
+    ID: string,
     isDone: boolean,
-    taskSituation: 'Open' | 'Closed' | 'Archived';
+    situation: 'Open' | 'Closed' | 'Archived';
 }
 
 export default Task;

@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import Task from "./TaskType";
 import TaskDiv from "./TaskDiv";
-import TaskSections from "./TaskSections";
+import TaskSections, { SectionsName } from "./TaskSections";
 
 function App() {
   const [tasksArr, setTasksArr] = useState<Task[]>([]);
   const [filteredTasksArr, setFilteredTasksArr] = useState<Task[]>([]);
   const [inputNewTaskName, setInputNewTaskName] = useState<string>('');
   const [inputNewTaskDescription, setInputNewTaskDescription] = useState<string>('');
-  const [renderedSection, setRenderedSection] = useState<'All' | 'Open' | 'Closed' | 'Archived'>('All');
+  const [renderedSection, setRenderedSection] = useState<SectionsName>('All');
 
   useEffect(() => {
     if (renderedSection === 'All') {
       setFilteredTasksArr([...tasksArr]);
     } else {
-      setFilteredTasksArr(tasksArr.filter(task => task.taskSituation === renderedSection));
+      setFilteredTasksArr(tasksArr.filter(task => task.situation === renderedSection));
     }
   }, [tasksArr, renderedSection]);
-
 
   function verifyTaskName(newName: string): string {
     if (newName.length <= 3) {
@@ -47,7 +46,7 @@ function App() {
         <button onClick={() => {
           const newName = verifyTaskName(inputNewTaskName);
           const newDescription = verifyTaskDescription(inputNewTaskDescription);
-          const newTask: Task = { taskName: newName, taskDescription: newDescription, taskID: crypto.randomUUID(), isDone: false, taskSituation: 'Open' }
+          const newTask: Task = { name: newName, description: newDescription, ID: crypto.randomUUID(), isDone: false, situation: 'Open' }
           setTasksArr(prev => {
             const auxArr = [...prev, newTask];
             return auxArr;
@@ -57,22 +56,23 @@ function App() {
       </div>
       <TaskSections
         allTasksAmount={tasksArr.length}
-        archivedTasksAmount={0}
-        closedTasksAmount={0}
-        openTasksAmount={0}
+        archivedTasksAmount={tasksArr.filter(t => t.situation === 'Archived').length}
+        closedTasksAmount={tasksArr.filter(t => t.situation === 'Closed').length}
+        openTasksAmount={tasksArr.filter(t => t.situation === 'Open').length}
         selectSectionToRender={(section) => {
           setRenderedSection(section);
-          console.log(renderedSection);
-        }} />
+        }}
+        activeSection={renderedSection} />
 
       <div className="tasks_div">
         {filteredTasksArr.map(task => {
           return <TaskDiv
+            key={task.ID}
             task={task}
             checkTask={() => {
               setTasksArr(prev => {
                 const auxArr = [...prev];
-                const index = auxArr.findIndex(i => i.taskID === task.taskID);
+                const index = auxArr.findIndex(i => i.ID === task.ID);
                 auxArr[index] = { ...auxArr[index], isDone: !auxArr[index].isDone }
                 return auxArr;
               })
@@ -80,13 +80,13 @@ function App() {
             removeTask={() => {
               setTasksArr(prev => {
                 const auxArr = [...prev];
-                return auxArr.filter(t => t.taskID !== task.taskID);
+                return auxArr.filter(t => t.ID !== task.ID);
               })
             }}
             archiveTask={() => {
               setTasksArr(prev => {
                 let newSituation: 'Open' | 'Closed' | 'Archived';
-                if (task.taskSituation !== 'Archived') {
+                if (task.situation !== 'Archived') {
                   newSituation = 'Archived';
                 } else if (task.isDone === false) {
                   newSituation = 'Open';
@@ -94,8 +94,8 @@ function App() {
                   newSituation = 'Closed';
                 }
                 let auxArr: Task[] = [...prev];
-                const index = auxArr.findIndex(i => i.taskID === task.taskID);
-                auxArr[index] = { ...auxArr[index], taskSituation: newSituation };
+                const index = auxArr.findIndex(i => i.ID === task.ID);
+                auxArr[index] = { ...auxArr[index], situation: newSituation };
                 return auxArr;
               })
             }}
@@ -110,8 +110,8 @@ function App() {
                 const newName = verifyTaskName(inputNewTaskName);
                 const newDescription = verifyTaskDescription(inputNewTaskDescription);
                 const auxArr = [...prev];
-                const index = auxArr.findIndex(i => i.taskID === task.taskID);
-                auxArr[index] = { ...auxArr[index], taskName: newName, taskDescription: newDescription }
+                const index = auxArr.findIndex(i => i.ID === task.ID);
+                auxArr[index] = { ...auxArr[index], name: newName, description: newDescription }
                 setInputNewTaskName('');
                 setInputNewTaskDescription('');
                 return auxArr;

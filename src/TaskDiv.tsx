@@ -17,9 +17,9 @@ const TaskDiv = ({ task, checkTask, removeTask, archiveTask, handleNameChange, h
         <div className="task_div">
             <div className="task_top_div">
                 <div className="task_texts">
-                    <p className="task_name_element" style={{ textDecoration: task.isDone ? 'line-through' : 'none' }}>{task.taskName}</p>
-                    <p className="task_description_element">{task.taskDescription}</p>
-                    <p>{task.taskSituation}</p>
+                    <p className="task_name_element" style={{ textDecoration: task.isDone ? 'line-through' : 'none' }}>{task.name}</p>
+                    <p className="task_description_element">{task.description}</p>
+                    <p>{task.situation}</p>
                 </div>
                 <div className="task_checkcircle" onClick={checkTask}>&#10003;</div>
             </div>
